@@ -87,8 +87,8 @@ def contact():
 def about():
 	return render_template("about.html")
 
-@app.route("/generate", methods=['GET', 'POST'])
-def generate():
+@app.route("/report", methods=['GET', 'POST'])
+def report():
 	if request.method == 'POST':
 		twapi = twitter.Api(consumer_key=YOUR_APP_CONSUMER_KEY,
 						consumer_secret=YOUR_APP_CONSUMER_SECRET,

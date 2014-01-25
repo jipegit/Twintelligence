@@ -17,6 +17,10 @@ Copy all files from Github
 
 python-twitter is not compatible with Python3 yet
 
+If you want to run it with Nginx and uwsgi
+
+* apt-get install nginx uwsgi uwsgi-plugin-python
+
 ## Setup
 
 1. Create an application. See https://dev.twitter.com/ 
