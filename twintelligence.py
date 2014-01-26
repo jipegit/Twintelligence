@@ -101,6 +101,7 @@ def report():
 
 		if request.form['nbtweets'] != "":
 			nbtweets = int(request.form['nbtweets'])
+			if nbtweets > 2000: nbtweets = 2000
 		else:
 			nbtweets = 1000
 
