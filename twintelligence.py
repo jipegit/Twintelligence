@@ -24,6 +24,7 @@ def getstatuses(twapi, userid, twnumber):
 	gspcoordinates = []
 	langs = {}
 	hours = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+	maxid = 0
 
 	print("[D] Retrieving the list of tweets (it might take a while...)")
 
@@ -105,7 +106,7 @@ def report():
 		else:
 			nbtweets = 1000
 		
-		print('"[D] Trying to get [' + str(nbtweets) + '] tweets')
+		print('[D] Trying to get [' + str(nbtweets) + '] tweets')
 
 		userdetails = {}
 		userdetails['screen_name'] = '@' + twapi.GetUser(userid).GetScreenName()
