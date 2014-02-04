@@ -28,12 +28,14 @@ def getstatuses(twapi, userid, twnumber):
 	print("[D] Retrieving the list of tweets (it might take a while...)")
 
 	try:
-		items = twapi.GetUserTimeline(user_id=userid, count=200)			#Can't request more than 200 items at a time
+		items = twapi.GetUserTimeline(user_id=userid, count=200)		#Can't request more than 200 items at a time
 	except twitter.TwitterError as e:
 		print(u"[-] ERROR: (" + e[0] + ")")
 		return(Data(0,0,0))
 		
 	while len(items) > 0 and totalitems < twnumber:
+		if maxid == items[-1].id:
+			break
 		maxid = items[-1].id
 		for item in items:
 			if totalitems >= twnumber:
@@ -97,13 +99,13 @@ def report():
 		
 		userid = twapi.GetUser(screen_name=request.form['screen_name']).GetId()
 		
-		print('"[D] Trying to get [' + request.form['nbtweets'] + '] tweets')
-
 		if request.form['nbtweets'] != "":
 			nbtweets = int(request.form['nbtweets'])
 			if nbtweets > 2000: nbtweets = 2000
 		else:
 			nbtweets = 1000
+		
+		print('"[D] Trying to get [' + str(nbtweets) + '] tweets')
 
 		userdetails = {}
 		userdetails['screen_name'] = '@' + twapi.GetUser(userid).GetScreenName()
