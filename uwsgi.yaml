@@ -8,5 +8,5 @@ uwsgi:
   wsgi-file: /usr/share/nginx/www/Twintelligence/twintelligence.py
   callable: app
   processes: 1
-#  pythonpath: /home/cert/env-certtools/lib/python2.7/site-packages
+#  pythonpath: 
  plugins: python
