@@ -1,3 +1,11 @@
+#
+# Twintelligence
+#
+# Twintelligence is a free Twitter OSINT tool
+#
+# Author: @Jipe_ 
+#
+
 import twitter
 from datetime import *
 from flask import Flask, render_template, redirect, request
@@ -21,7 +29,7 @@ def getstatuses(twapi, userid, twnumber):
 	
 	totalitems = 0
 	items = None
-	gspcoordinates = []
+	gpscoordinates = []
 	langs = {}
 	hours = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 	maxid = 0
@@ -43,7 +51,7 @@ def getstatuses(twapi, userid, twnumber):
 				break
 			
 			if item.coordinates:
-				gspcoordinates.append({'created_at' : item.created_at, 'lat' : item.coordinates['coordinates'][1], 'lng' : item.coordinates['coordinates'][0]})
+				gpscoordinates.append({'created_at' : item.created_at, 'lat' : item.coordinates['coordinates'][1], 'lng' : item.coordinates['coordinates'][0]})
 
 			if item.lang in langs:
 				langs[item.lang] += 1
@@ -53,7 +61,8 @@ def getstatuses(twapi, userid, twnumber):
 			hours[datetime.strptime(item.created_at, "%a %b %d %H:%M:%S +0000 %Y").hour] += 1
 			
 			totalitems += 1
-			print("[D] [" + str(totalitems) + "] - "+ str(item.id) + " (" + item.created_at + ") added")
+			print("[D] [" + str(totalitems) + "] - "+ str(item.id) + " (" + item.created_at + ") - lang: " + item.lang + " added")
+			#print(item)
 
 		try:
 			items = twapi.GetUserTimeline(user_id=userid, count=200, max_id=maxid)
@@ -63,7 +72,7 @@ def getstatuses(twapi, userid, twnumber):
 
 	print("[D] Got " + str(totalitems) + " tweets")
 	
-	print gspcoordinates
+	print gpscoordinates
 	
 	langscountries = []
 	langsnumbers = []
@@ -76,7 +85,7 @@ def getstatuses(twapi, userid, twnumber):
 	langsdata.append(langscountries)
 	langsdata.append(langsnumbers)
 
-	return(Data(gspcoordinates, langsdata, hours))
+	return(Data(gpscoordinates, langsdata, hours))
 
 @app.route("/")
 def index():
@@ -111,12 +120,44 @@ def report():
 		userdetails = {}
 		userdetails['screen_name'] = '@' + twapi.GetUser(userid).GetScreenName()
 		userdetails['name'] = twapi.GetUser(userid).GetName()
+		userdetails['created_at'] = twapi.GetUser(userid).GetCreatedAt()
 		userdetails['location'] = twapi.GetUser(userid).GetLocation() 
 		userdetails['utcoffset'] = str(twapi.GetUser(userid).GetUtcOffset())
 		userdetails['tz'] = twapi.GetUser(userid).GetTimeZone()
 		userdetails['lang'] = twapi.GetUser(userid).GetLang()
 		userdetails['nbtweets'] = nbtweets
 		
+		print('[D] Trying to get the followers')
+		followersid = twapi.GetFollowerIDs(user_id=userid)
+		if len(followersid) <= 20:
+			firstfollowersid = followersid
+		else:
+			firstfollowersid = followersid[-21:-1]
+
+		#print('[D] Got ' + str(len(followers)) + ' followers')
+
+		print('[D] Trying to get the friends')
+		
+		friendsid = twapi.GetFriendIDs(user_id=userid)
+		if len(friendsid) <= 20:
+			firstfriendsid = friendsid
+		else:
+			firstfriendsid = friendsid[-21:-1]
+
+		firstfollowers = twapi.UsersLookup(user_id=firstfollowersid)
+		firstfriends = twapi.UsersLookup(user_id=firstfriendsid)
+
+		userdetails['firstfollowers'] = [ x.screen_name for x in firstfollowers]
+		userdetails['firstfriends'] = [ x.screen_name for x in firstfriends]
+
+		print userdetails['firstfollowers'] 
+		print userdetails['firstfriends']
+
+		# print('[D] Joined Friends/Followers')
+		# for f in fff:
+		# 	print('[D] ' + f.screen_name)
+
+		print('[D] Trying to get [' + str(nbtweets) + '] tweets')
 		returneddata = getstatuses(twapi, userid, nbtweets)
 
 		return render_template("report.html",
