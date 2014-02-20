@@ -175,7 +175,7 @@ def report():
 	except twitter.TwitterError as e:
 		print e[0][0]["message"]
 		return render_template("fail.html",
-				error = e[0][0]["message"])
+			error = e[0][0]["message"])
 
 if __name__ == "__main__":
 	app.run(debug=True)

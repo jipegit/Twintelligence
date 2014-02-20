@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Twintelligence</title>
+		<meta charset="utf-8">
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+		<META HTTP-EQUIV="Refresh" CONTENT="5; URL=/">
+		<style>
+			.header h3 {
+			  line-height: 40px;
+			  padding-bottom: 10px;
+			}
+			@media (min-width: 768px) {
+			  .container {
+			    max-width: 730px;
+			  }
+			}
+		</style>
+	</head>
+  <body>
+  	<div class="container">
+  		<div class="header">
+  			<h3 class="text-muted">Twintelligence</h3>
+  		</div>
+		<div class="container">
+        	<h1>Oops!</h1>
+        	<div class="alert alert-danger">
+				<strong>{{ error }}</strong>
+			</div>
+        	<img src="{{ url_for('.static', filename = 'picard-facepalm.jpg') }}" alt="FAIL" title="FAIL" height="303" width="461" border="0">
+      </div>
+     </div>
+  </body>
+</html>

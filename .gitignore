@@ -27,7 +27,7 @@ pip-log.txt
 .tox
 nosetests.xml
 *.txt
-*.html
+#*.html
 *.token
 # Translations
 *.mo
