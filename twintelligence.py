@@ -99,74 +99,83 @@ def contact():
 def about():
 	return render_template("about.html")
 
+@app.route("/fail")
+def fail():
+	return render_template("fail.html")
+
 @app.route("/report", methods=['GET', 'POST'])
 def report():
-	if request.method == 'POST':
-		twapi = twitter.Api(consumer_key=YOUR_APP_CONSUMER_KEY,
-						consumer_secret=YOUR_APP_CONSUMER_SECRET,
-						access_token_key=YOUR_ACCESS_TOKEN,
-	 					access_token_secret=YOUR_ACCESS_TOKEN_SECRET)
-		
-		userid = twapi.GetUser(screen_name=request.form['screen_name']).GetId()
-		
-		if request.form['nbtweets'] != "":
-			nbtweets = int(request.form['nbtweets'])
-			if nbtweets > 2000: nbtweets = 2000
+	try:
+		if request.method == 'POST':
+			twapi = twitter.Api(consumer_key=YOUR_APP_CONSUMER_KEY,
+							consumer_secret=YOUR_APP_CONSUMER_SECRET,
+							access_token_key=YOUR_ACCESS_TOKEN,
+		 					access_token_secret=YOUR_ACCESS_TOKEN_SECRET)
+			
+			userid = twapi.GetUser(screen_name=request.form['screen_name']).GetId()
+			
+			if request.form['nbtweets'] != "":
+				nbtweets = int(request.form['nbtweets'])
+				if nbtweets > 2000: nbtweets = 2000
+			else:
+				nbtweets = 1000
+
+			print('[D] Trying to get [' + str(nbtweets) + '] tweets')
+
+			userdetails = {}
+			userdetails['screen_name'] = '@' + twapi.GetUser(userid).GetScreenName()
+			userdetails['name'] = twapi.GetUser(userid).GetName()
+			userdetails['created_at'] = twapi.GetUser(userid).GetCreatedAt()
+			userdetails['location'] = twapi.GetUser(userid).GetLocation() 
+			userdetails['utcoffset'] = str(twapi.GetUser(userid).GetUtcOffset())
+			userdetails['tz'] = twapi.GetUser(userid).GetTimeZone()
+			userdetails['lang'] = twapi.GetUser(userid).GetLang()
+			userdetails['nbtweets'] = nbtweets
+
+			print('[D] Trying to get the followers')
+			followersid = twapi.GetFollowerIDs(user_id=userid)
+			if len(followersid) <= 20:
+				firstfollowersid = followersid
+			else:
+				firstfollowersid = followersid[-21:-1]
+
+			#print('[D] Got ' + str(len(followers)) + ' followers')
+
+			print('[D] Trying to get the friends')
+
+			friendsid = twapi.GetFriendIDs(user_id=userid)
+			if len(friendsid) <= 20:
+				firstfriendsid = friendsid
+			else:
+				firstfriendsid = friendsid[-21:-1]
+
+			firstfollowers = twapi.UsersLookup(user_id=firstfollowersid)
+			firstfriends = twapi.UsersLookup(user_id=firstfriendsid)
+
+			userdetails['firstfollowers'] = [ x.screen_name for x in firstfollowers]
+			userdetails['firstfriends'] = [ x.screen_name for x in firstfriends]
+
+			print userdetails['firstfollowers'] 
+			print userdetails['firstfriends']
+
+			# print('[D] Joined Friends/Followers')
+			# for f in fff:
+			# 	print('[D] ' + f.screen_name)
+
+			print('[D] Trying to get [' + str(nbtweets) + '] tweets')
+			returneddata = getstatuses(twapi, userid, nbtweets)
+
+			return render_template("report.html",
+				userdetails = userdetails,
+				gpsdata = returneddata.g,
+				langsbarchartdata = returneddata.l,
+				hoursbarchartdata = returneddata.h)
 		else:
-			nbtweets = 1000
-		
-		print('[D] Trying to get [' + str(nbtweets) + '] tweets')
-
-		userdetails = {}
-		userdetails['screen_name'] = '@' + twapi.GetUser(userid).GetScreenName()
-		userdetails['name'] = twapi.GetUser(userid).GetName()
-		userdetails['created_at'] = twapi.GetUser(userid).GetCreatedAt()
-		userdetails['location'] = twapi.GetUser(userid).GetLocation() 
-		userdetails['utcoffset'] = str(twapi.GetUser(userid).GetUtcOffset())
-		userdetails['tz'] = twapi.GetUser(userid).GetTimeZone()
-		userdetails['lang'] = twapi.GetUser(userid).GetLang()
-		userdetails['nbtweets'] = nbtweets
-		
-		print('[D] Trying to get the followers')
-		followersid = twapi.GetFollowerIDs(user_id=userid)
-		if len(followersid) <= 20:
-			firstfollowersid = followersid
-		else:
-			firstfollowersid = followersid[-21:-1]
-
-		#print('[D] Got ' + str(len(followers)) + ' followers')
-
-		print('[D] Trying to get the friends')
-		
-		friendsid = twapi.GetFriendIDs(user_id=userid)
-		if len(friendsid) <= 20:
-			firstfriendsid = friendsid
-		else:
-			firstfriendsid = friendsid[-21:-1]
-
-		firstfollowers = twapi.UsersLookup(user_id=firstfollowersid)
-		firstfriends = twapi.UsersLookup(user_id=firstfriendsid)
-
-		userdetails['firstfollowers'] = [ x.screen_name for x in firstfollowers]
-		userdetails['firstfriends'] = [ x.screen_name for x in firstfriends]
-
-		print userdetails['firstfollowers'] 
-		print userdetails['firstfriends']
-
-		# print('[D] Joined Friends/Followers')
-		# for f in fff:
-		# 	print('[D] ' + f.screen_name)
-
-		print('[D] Trying to get [' + str(nbtweets) + '] tweets')
-		returneddata = getstatuses(twapi, userid, nbtweets)
-
-		return render_template("report.html",
-			userdetails = userdetails,
-			gpsdata = returneddata.g,
-			langsbarchartdata = returneddata.l,
-			hoursbarchartdata = returneddata.h)
-	else:
-		return redirect("/")
+			return redirect("/")
+	except twitter.TwitterError as e:
+		print e[0][0]["message"]
+		return render_template("fail.html",
+				error = e[0][0]["message"])
 
 if __name__ == "__main__":
 	app.run(debug=True)
