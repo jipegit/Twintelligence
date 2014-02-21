@@ -165,7 +165,7 @@
               </tr>
             </thead>
             <tbody>
-          {% for follower in userdetails.firstfollowers %} <tr><td><span class="glyphicon glyphicon-new-window"></span><a href="https://twitter.com/@{{ follower }}" target="_blank"> @{{ follower }}</a> </tr></td>  {% endfor %}
+          {% for follower in userdetails.firstfollowers %} <tr><td><span class="glyphicon glyphicon-new-window"></span><a href="https://twitter.com/{{ follower }}" target="_blank"> @{{ follower }}</a> </tr></td>  {% endfor %}
            </tbody>
           </table>
          </div>
@@ -179,7 +179,7 @@
               </tr>
             </thead>
             <tbody>
-          {% for friend in userdetails.firstfriends %} <tr><td><span class="glyphicon glyphicon-new-window"></span><a href="https://twitter.com/@{{ friend }}" target="_blank"> @{{ friend }}</a> </tr></td> {% endfor %}
+          {% for friend in userdetails.firstfriends %} <tr><td><span class="glyphicon glyphicon-new-window"></span><a href="https://twitter.com/{{ friend }}" target="_blank"> @{{ friend }}</a> </tr></td> {% endfor %}
            </tbody>
           </table>
         </div>

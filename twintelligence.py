@@ -152,8 +152,8 @@ def report():
 			firstfollowers = twapi.UsersLookup(user_id=firstfollowersid)
 			firstfriends = twapi.UsersLookup(user_id=firstfriendsid)
 
-			userdetails['firstfollowers'] = [ x.screen_name for x in firstfollowers].reverse()
-			userdetails['firstfriends'] = [ x.screen_name for x in firstfriends].reverse()
+			userdetails['firstfollowers'] = reversed([ x.screen_name for x in firstfollowers])
+			userdetails['firstfriends'] = reversed([ x.screen_name for x in firstfriends])
 
 			print userdetails['firstfollowers'] 
 			print userdetails['firstfriends']
