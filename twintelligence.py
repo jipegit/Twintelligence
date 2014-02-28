@@ -132,6 +132,9 @@ def report():
 			userdetails['lang'] = twapi.GetUser(userid).GetLang()
 			userdetails['nbtweets'] = nbtweets
 
+			firstfollowers = []
+			firstfriends = []
+
 			print('[D] Trying to get the followers')
 			followersid = twapi.GetFollowerIDs(user_id=userid)
 			if len(followersid) <= 20:
@@ -149,8 +152,11 @@ def report():
 			else:
 				firstfriendsid = friendsid[-21:-1]
 
-			firstfollowers = twapi.UsersLookup(user_id=firstfollowersid)
-			firstfriends = twapi.UsersLookup(user_id=firstfriendsid)
+			if firstfollowersid:
+				firstfollowers = twapi.UsersLookup(user_id=firstfollowersid)
+
+			if firstfriendsid:
+				firstfriends = twapi.UsersLookup(user_id=firstfriendsid)
 
 			userdetails['firstfollowers'] = reversed([ x.screen_name for x in firstfollowers])
 			userdetails['firstfriends'] = reversed([ x.screen_name for x in firstfriends])
@@ -173,9 +179,9 @@ def report():
 		else:
 			return redirect("/")
 	except twitter.TwitterError as e:
-		print e[0][0]["message"]
+		print e #[0]["message"]
 		return render_template("fail.html",
-			error = e[0][0]["message"])
+			error = e[0])
 
 if __name__ == "__main__":
 	app.run(debug=True)
