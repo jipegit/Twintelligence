@@ -31,9 +31,12 @@ If you want to run it with Nginx and uwsgi
 
 ## How to run
 
-python2.7 twintelligence.py
+python twintelligence.py
 
 ## Changelog
+
+### 0.2
+ * python-twitter & API model update
 
 ### 0.1
  * Initial alpha release

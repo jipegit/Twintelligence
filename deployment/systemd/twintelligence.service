@@ -1,0 +1,14 @@
+[Unit]
+Description=uWSGI instance to serve Twintelligence
+After=network.target
+
+[Service]
+User=dev
+Group=www-data
+WorkingDirectory=/home/dev/Twintelligence
+Environment="PATH=/home/dev/twintelligence-env/bin"
+ExecStart=/home/dev/twintelligence-env/bin/uwsgi --ini twintelligence.ini
+
+[Install]
+WantedBy=multi-user.target
+

@@ -1,0 +1,9 @@
+server {
+    listen 80;
+    server_name twintelligence.io;
+
+    location / {
+        include uwsgi_params;
+        uwsgi_pass unix:/home/dev/Twintelligence/twintelligence.sock;
+    }
+}
