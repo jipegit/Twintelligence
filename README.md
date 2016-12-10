@@ -15,8 +15,6 @@ Copy all files from Github
 * pip install python-twitter
 * pip install flask
 
-python-twitter is not compatible with Python3 yet
-
 If you want to run it with Nginx and uwsgi
 
 * apt-get install nginx uwsgi uwsgi-plugin-python
@@ -43,7 +41,7 @@ python2.7 twintelligence.py
 ## License
 
 Twintelligence
-Copyright (C) 2013 Jean-Philippe Teissier
+Copyright (C) 2013-2016 Jean-Philippe Teissier
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
