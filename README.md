@@ -8,7 +8,7 @@ Jean-Philippe Teissier - @Jipe_
 
 ## Development status
 
-**FECT is no longer maintained**
+**Twintelligence is no longer maintained**
 
 ## How to install
 
