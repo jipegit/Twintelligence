@@ -6,6 +6,10 @@ Twintelligence is a free Twitter OSINT tool
 
 Jean-Philippe Teissier - @Jipe_ 
 
+## Development status
+
+**FECT is no longer maintained**
+
 ## How to install
 
 Copy all files from Github
