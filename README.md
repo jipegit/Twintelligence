@@ -2,6 +2,9 @@
 
 Twintelligence is a free Twitter OSINT tool
 
+![Maintenance](https://img.shields.io/badge/Maintained%3F-no-red.svg)
+![No Maintenance Intended](http://unmaintained.tech/badge.svg)
+
 ## Author 
 
 Jean-Philippe Teissier - @Jipe_ 
